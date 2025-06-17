@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resumes for {{ job.title }}</title>
+</head>
+<body>
+    <h2>Resumes Matching Job: {{ job.title }}</h2>
+    <p>Required Skills: {{ job.skills }}</p>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Resume Filename</th>
+                <th>Skills</th>
+                <th>Experience</th>
+                <th>Uploaded On</th>
+                <th>Match Score (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resume in resumes %}
+            <tr>
+                <td>{{ resume.filename }}</td>
+                <td>{{ resume.parsed_skills }}</td>
+                <td>{{ resume.parsed_experience }}</td>
+                <td>{{ resume.upload_date }}</td>
+                <td>{{ resume.score }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">No resumes found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+</body>
+</html>

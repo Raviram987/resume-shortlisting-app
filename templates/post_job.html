@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post a Job</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Gradient background like previous pages */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            color: #343a40;
+        }
+
+        /* White translucent container */
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            max-width: 500px;
+            width: 100%;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            margin-bottom: 24px;
+            color: #4b2cc8;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        form input[type="text"],
+        form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        form input[type="text"]:focus,
+        form textarea:focus {
+            border-color: #764ba2;
+            outline: none;
+        }
+
+        form textarea {
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #4b2cc8;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #36238f;
+        }
+
+        .message {
+            background-color: #dff0d8;
+            border: 1px solid #d0e9c6;
+            color: #3c763d;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        p.links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        p.links a {
+            margin: 0 10px;
+            color: #764ba2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        p.links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Post a New Job</h2>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="message">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <input type="text" name="title" placeholder="Job Title" required>
+            <textarea name="description" placeholder="Job Description" rows="5" required></textarea>
+            <input type="text" name="skills" placeholder="Required Skills (comma separated)" required>
+            <button type="submit">Post Job</button>
+        </form>
+
+        <p class="links">
+            <a href="{{ url_for('list_jobs') }}">View All Jobs</a> |
+            <a href="{{ url_for('home') }}">Home</a>
+        </p>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Matched Candidates</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h2>Matched Candidates for Job: {{ job.title }}</h2>
+    <p><strong>Description:</strong> {{ job.description }}</p>
+    <p><strong>Required Skills:</strong> {{ job.skills }}</p>
+
+    {% if matched %}
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>Candidate Resume</th>
+                <th>Matched Skills</th>
+                <th>Experience Match</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in matched %}
+            <tr>
+                <td>{{ entry.resume.filename }}</td>
+                <td>{{ entry.matched_skills }}</td>
+                <td>{{ 'Yes' if entry.experience_match else 'No' }}</td>
+                <td>{{ entry.score }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No candidates matched for this job yet.</p>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+</div>
+</body>
+</html>

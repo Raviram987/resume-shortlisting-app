@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Your Resume</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f7f8;
+            padding: 40px;
+        }
+        .resume-box {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #4b2cc8;
+        }
+        p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+<div class="resume-box">
+    <h1>{{ name }}</h1>
+    <p><strong>Email:</strong> {{ email }}</p>
+    <p><strong>Phone:</strong> {{ phone }}</p>
+
+    <h2>Skills</h2>
+    <p>{{ skills }}</p>
+
+    <h2>Experience</h2>
+    <p>{{ experience }}</p>
+
+    <h2>Education</h2>
+    <p>{{ education }}</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Shortlisted Candidates for {{ job.title }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #343a40;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            max-width: 1000px;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+            padding: 30px 40px;
+        }
+
+        h2 {
+            color: #4b2cc8;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        thead {
+            background-color: #4b2cc8;
+            color: white;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            text-align: left;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .high-score {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        a.button-link,
+        button.submit-button {
+            display: inline-block;
+            margin-top: 30px;
+            text-decoration: none;
+            background-color: #4b2cc8;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        a.button-link:hover,
+        button.submit-button:hover {
+            background-color: #36238f;
+        }
+
+        /* Responsive table on small screens */
+        @media (max-width: 768px) {
+
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+
+            thead tr {
+                display: none;
+            }
+
+            tbody tr {
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                padding: 15px;
+                background: #fff;
+            }
+
+            tbody td {
+                padding-left: 50%;
+                position: relative;
+                text-align: right;
+            }
+
+            tbody td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 15px;
+                top: 12px;
+                font-weight: 600;
+                text-align: left;
+                color: #4b2cc8;
+                width: 45%;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Shortlisted Candidates for Job: {{ job.title }}</h2>
+        <p><strong>Required Skills:</strong> {{ job.skills }}</p>
+
+        <form id="resumeForm">
+            <table id="resumeTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"></th>
+                        <th>Filename</th>
+                        <th>Skills Extracted</th>
+                        <th>Experience</th>
+                        <th>Uploaded On</th>
+                        <th>Uploaded By</th>
+                        <th>Match Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for resume in resumes %}
+                    <tr class="resume-row">
+                        <td data-label="Select">
+                            <input type="checkbox" class="resume-checkbox" name="selected_resumes"
+                                value="{{ resume.id }}">
+                        </td>
+                        <td data-label="Filename">{{ resume.filename }}</td>
+                        <td data-label="Skills Extracted">{{ resume.parsed_skills }}</td>
+                        <td data-label="Experience">{{ resume.parsed_experience }}</td>
+                        <td data-label="Uploaded On">{{ resume.upload_date }}</td>
+                        <td data-label="Uploaded By">{{ resume.uploaded_by }}</td>
+                        <td data-label="Match Score" class="{{ 'high-score' if resume.score > 0 else '' }}">{{
+                            resume.score }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding: 20px;">No resumes found for this job.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <button type="submit" class="submit-button">Shortlist Selected</button>
+            <button type="button" class="submit-button" onclick="downloadSelectedAsPDF()">Save as pdf</button>
+        </form>
+
+
+        <p><a class="button-link" href="{{ url_for('dashboard') }}">← Back to Dashboard</a></p>
+    </div>
+    <script>
+        function toggleSelectAll(source) {
+            const checkboxes = document.querySelectorAll('.resume-checkbox');
+            checkboxes.forEach(cb => cb.checked = source.checked);
+        }
+
+        function downloadSelectedAsPDF() {
+            const rows = document.querySelectorAll('.resume-row');
+            let selectedRowsHTML = '';
+            rows.forEach(row => {
+                if (row.querySelector('.resume-checkbox').checked) {
+                    selectedRowsHTML += row.outerHTML;
+                }
+            });
+
+            if (!selectedRowsHTML) {
+                alert("Please select at least one candidate to download.");
+                return;
+            }
+
+            const printWindow = window.open('', '', 'height=700,width=1000');
+            printWindow.document.write('<html><head><title>Selected Candidates</title>');
+            printWindow.document.write('<style>');
+            printWindow.document.write(`
+            body {
+                font-family: 'Segoe UI', sans-serif;
+                padding: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid #000;
+                padding: 8px;
+                text-align: left;
+            }
+            thead {
+                background-color: #eee;
+            }
+        `);
+            printWindow.document.write('</style></head><body>');
+            printWindow.document.write('<h2>Selected Shortlisted Candidates</h2>');
+            printWindow.document.write('<table>');
+            printWindow.document.write(document.querySelector('thead').outerHTML);
+            printWindow.document.write('<tbody>' + selectedRowsHTML + '</tbody>');
+            printWindow.document.write('</table>');
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+
+            printWindow.onload = function () {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            };
+        }
+    </script>
+
+
+</body>
+
+</html>
