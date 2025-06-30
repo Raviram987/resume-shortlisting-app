@@ -6,24 +6,14 @@ An intelligent, recruiter-focused platform that automates the process of resume 
 
 ##  Features
 
--  **Resume Parsing** using NLP
--  **Skill Matching & Scoring**
--  **ML Model Prediction** (Shortlist: Yes/No)
--  **Recruiter Dashboard**
-  - View total jobs, resumes, shortlisted count
--  **Resume Upload & Parsing**
--  **Job Posting & Management**
--  **Shortlisting, Downloading & Viewing Candidates**
--  **Interactive Landing Page** with 3D Animations
+-  Resume Parsing using NLP  
+-  Skill Matching & Scoring  
+-  ML Model Prediction (Shortlist: Yes/No)  
+-  Recruiter Dashboard  
+-  Resume Upload & Job Posting  
+-  Shortlisting, Downloading, & Candidate Viewer  
+-  3D Interactive Landing Page  
 
-
-
-##  Tech Stack
-
-| Frontend        | Backend        | AI/ML & DB     |
-|-----------------|----------------|----------------|
-| HTML, CSS (Tailwind/Custom), JS | Python, Flask  | scikit-learn, sqlite3, NLP (Regex-based) |
-| Three.js + Kokomi.js (3D canvas) | Jinja2 Templating | Model saved with `joblib` |
 
 
 
