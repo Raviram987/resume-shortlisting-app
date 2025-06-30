@@ -28,7 +28,20 @@ def allowed_file(filename):
 def home():
     if 'user' in session:
         return redirect(url_for('dashboard'))
-    return redirect(url_for('login'))
+    return render_template('landing.html')
+
+
+@app.route('/landing')
+def landing():
+    return render_template('landing.html')
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/features')
+def features():
+    return render_template('features.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -95,8 +108,10 @@ def dashboard():
     cursor.execute("SELECT * FROM jobs ORDER BY created_at DESC LIMIT 5")
     recent_jobs = cursor.fetchall()
 
+    
+    cursor.execute("SELECT COUNT(*) FROM resumes WHERE shortlisted = 'yes'")
+    shortlisted_count = cursor.fetchone()[0]
     conn.close()
-    shortlisted_count = session.get('shortlisted_count', 0)
 
     return render_template('dashboard.html',
                            user=user_email,

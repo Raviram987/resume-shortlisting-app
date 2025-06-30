@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Resume Shortlisting</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+  <!-- Fonts and Styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='landing/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <!-- Header Section -->
+  <header class="header">
+    <div class="header-container">
+      <h2 class="logo">ResumeAI</h2>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="{{ url_for('login') }}">Get Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 3D Background Canvas -->
+  <div id="sketch"></div>
+
+  <!-- Loader -->
+  <div class="loader-screen">
+    <div class="loading">
+      <span style="--i: 0">L</span>
+      <span style="--i: 1">O</span>
+      <span style="--i: 2">A</span>
+      <span style="--i: 3">D</span>
+      <span style="--i: 4">I</span>
+      <span style="--i: 5">N</span>
+      <span style="--i: 6">G</span>
+    </div>
+  </div>
+
+  <!-- Main Content Wrapper -->
+  <div class="main-content">
+
+    <!-- Hero Section -->
+    <div class="hero-dom">
+      <div>
+        <h1 class="hero-title">AI Resume Shortlisting</h1>
+        <p>Automated hiring powered by NLP + Machine Learning</p>
+        <div class="scroll-down">
+          <a href="#features">↓ Learn More</a>
+        </div>
+      </div>
+    </div>
+
+    
+  </div> <!-- end of main-content -->
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p>© 2025 ResumeAI. All rights reserved.</p>
+      <div class="social-links">
+        <a href="mailto:ravikumarnu25@gmail.com" target="_blank" aria-label="Email">
+          <i class="fa-solid fa-envelope"></i>
+        </a>
+        <a href="https://github.com/Raviram987" target="_blank" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/ravi-kumar-45630b235/" target="_blank" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for 3D Animation -->
+  <script type="module" src="{{ url_for('static', filename='landing/script.js') }}"></script>
+</body>
+
+</html>
