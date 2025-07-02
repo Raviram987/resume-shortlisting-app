@@ -2,205 +2,370 @@
 <html lang="en">
 
 <head>
+
   <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recruiter Dashboard</title>
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recruiter Dashboard</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
 
-  <!-- Fonts and CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts and CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Inter font (already likely included) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+
+    <!-- GSAP for animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #333;
-      transition: all 0.3s ease-in-out;
-    }
 
-    .topbar,
-    .hamburger {
-      position: fixed;
-      z-index: 1000;
-    }
+    <style>
+      .animated-gradient-bg {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
 
-    .hamburger {
-      top: 20px;
-      left: 20px;
-      font-size: 28px;
-      color: white;
-      cursor: pointer;
-    }
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 
-    .topbar {
-      top: 20px;
-      right: 30px;
-    }
-
-    .profile-link {
-      padding: 10px 18px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-    }
-
-    .profile-link:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: -260px;
-      width: 260px;
-      height: 100vh;
-      background-color: #311b92;
-      padding-top: 70px;
-      color: white;
-      transition: left 0.3s ease;
-      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .sidebar.active {
-      left: 0;
-    }
-
-    .sidebar a {
-      display: block;
-      padding: 15px 30px;
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .sidebar a:hover {
-      background-color: #4527a0;
-    }
-
-    .logout-btn {
-      background-color: #e53935 !important;
-    }
-
-    .content {
-      padding: 100px 30px 30px;
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    h2 {
-      text-align: center;
-      color: white;
-      margin-bottom: 30px;
-      font-weight: 700;
-    }
-
-    .stat-toggle {
-      padding: 10px 20px;
-      margin: 10px 10px 30px;
-      background-color: white;
-      color: #4527a0;
-      border: 2px solid #4527a0;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .stat-toggle:hover {
-      background-color: #4527a0;
-      color: white;
-    }
-
-    .stat-card {
-      max-width: 320px;
-      margin: 0 auto 30px;
-      padding: 30px;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      animation: fade 0.4s ease;
-    }
-
-    .card-jobs {
-      border-top: 6px solid #29b6f6;
-    }
-
-    .card-resumes {
-      border-top: 6px solid #ffb74d;
-    }
-
-    .card-shortlisted {
-      border-top: 6px solid #66bb6a;
-    }
-
-    @keyframes fade {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
+      body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #333;
+        transition: all 0.3s ease-in-out;
       }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      .topbar,
+      .hamburger {
+        position: fixed;
+        z-index: 1000;
       }
-    }
 
-    .job-list li {
-      background: white;
-      border-radius: 12px;
-      padding: 18px 22px;
-      margin-bottom: 15px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-    }
+      .hamburger {
+        top: 20px;
+        left: 20px;
+        font-size: 28px;
+        color: white;
+        cursor: pointer;
+      }
 
-    .job-list li strong {
-      font-size: 19px;
-      color: #311b92;
-    }
+      .topbar {
+        top: 20px;
+        right: 30px;
+      }
 
-    .btn-group .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      margin-top: 12px;
-      margin-right: 10px;
-      text-decoration: none;
-      color: white;
-      transition: transform 0.2s ease;
-    }
+      .profile-link {
+        padding: 10px 18px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
 
-    .btn-edit {
-      background-color: #43a047;
-    }
+      .profile-link:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
 
-    .btn-delete {
-      background-color: #e53935;
-    }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        width: 260px;
+        height: 100vh;
+        background-color: #311b92;
+        padding-top: 70px;
+        color: white;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+      }
 
-    .btn:hover {
-      transform: scale(1.07);
-    }
+      .sidebar.active {
+        left: 0;
+      }
 
-    @media (max-width: 768px) {
-      .stat-toggle {
+      .sidebar a {
         display: block;
-        margin: 10px auto;
+        padding: 15px 30px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
       }
-    }
-  </style>
-</head>
+
+      .sidebar a:hover {
+        background-color: #4527a0;
+      }
+
+      .logout-btn {
+        background-color: #e53935 !important;
+      }
+
+      .content {
+        padding: 100px 30px 30px;
+        max-width: 1100px;
+        margin: auto;
+      }
+
+      h2 {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+        font-weight: 700;
+      }
+
+      .stat-toggle {
+        padding: 10px 20px;
+        margin: 10px 10px 30px;
+        background-color: white;
+        color: #4527a0;
+        border: 2px solid #4527a0;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .stat-toggle:hover {
+        background-color: #4527a0;
+        color: white;
+      }
+
+      .stat-card {
+        max-width: 320px;
+        margin: 0 auto 30px;
+        padding: 30px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: fade 0.4s ease;
+      }
+
+      .card-jobs {
+        border-top: 6px solid #29b6f6;
+      }
+
+      .card-resumes {
+        border-top: 6px solid #ffb74d;
+      }
+
+      .card-shortlisted {
+        border-top: 6px solid #66bb6a;
+      }
+
+      @keyframes fade {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .job-list li {
+        background: white;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 15px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      }
+
+      .job-list li strong {
+        font-size: 19px;
+        color: #311b92;
+      }
+
+      .btn-group .btn {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-top: 12px;
+        margin-right: 10px;
+        text-decoration: none;
+        color: white;
+        transition: transform 0.2s ease;
+      }
+
+      .btn-edit {
+        background-color: #43a047;
+      }
+
+      .btn-delete {
+        background-color: #e53935;
+      }
+
+      .btn:hover {
+        transform: scale(1.07);
+      }
+
+      @media (max-width: 768px) {
+        .stat-toggle {
+          display: block;
+          margin: 10px auto;
+        }
+      }
+
+      :root {
+        --color-bg: #050505;
+        --color-text: #ffffff;
+        --color-primary: #ff3366;
+        --color-secondary: #3366ff;
+        --color-tertiary: #33ddff;
+        --color-accent: #ffcc00;
+        --card-radius: 16px;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.1);
+        --card-shadow: 0 15px 30px -12px rgba(0, 0, 0, 0.5);
+        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+        padding: 0 1rem;
+      }
+
+      .card.recent-job-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 1.5rem;
+        color: #fff;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        transition: transform 0.4s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card.recent-job-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card-content h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #fff;
+      }
+
+      .card-content p {
+        font-size: 0.95rem;
+        color: #ccc;
+        margin-bottom: 0.5rem;
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.2rem;
+      }
+
+      .card-button {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #fff;
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .card-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .btn-edit {
+        background-color: rgba(67, 160, 71, 0.3);
+      }
+
+      .btn-delete {
+        background-color: rgba(229, 57, 53, 0.3);
+      }
+
+      :root {
+        --circle-size: 0%;
+        --x: 50%;
+        --y: 50%;
+      }
+
+      .stats-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 40px;
+      }
+
+      .magic-card {
+        position: relative;
+        width: 280px;
+        border-radius: 20px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transition: 0.4s ease-in-out;
+      }
+
+      .card-front,
+      .card-overlay {
+        width: 100%;
+        padding: 30px;
+        border-radius: 20px;
+      }
+
+      .card-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        clip-path: circle(var(--circle-size) at var(--x) var(--y));
+        opacity: 0;
+        background-color: #0be477;
+        transition: clip-path 0.3s ease, opacity 0.3s ease;
+      }
+
+      .firstPart {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .container-text {
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+    </style>
+  </head>
 
 <body>
   <div class="hamburger" id="hamburger">&#9776;</div>
@@ -215,53 +380,95 @@
     <a href="{{ url_for('resume_form') }}">Build Resume</a>
     <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
   </nav>
+  <div class="animated-gradient-bg"></div>
 
   <div class="content" id="content">
     <h2>Welcome, {{ user }}</h2>
 
-    <div style="text-align: center;">
-      <button class="stat-toggle" onclick="showStat('jobs')">Jobs</button>
-      <button class="stat-toggle" onclick="showStat('resumes')">Resumes</button>
-      <button class="stat-toggle" onclick="showStat('shortlisted')">Shortlisted</button>
-    </div>
 
-    <div id="stats-container">
-      <div class="stat-card card-jobs" id="jobs">
-        <h3>Total Jobs</h3>
-        <p>{{ total_jobs }}</p>
-      </div>
-      <div class="stat-card card-resumes" id="resumes" style="display: none;">
-        <h3>Resumes Uploaded</h3>
-        <p>{{ total_resumes }}</p>
-      </div>
-      <div class="stat-card card-shortlisted" id="shortlisted" style="display: none;">
-        <h3>Shortlisted</h3>
-        <p>{{ shortlisted_count }}</p>
-      </div>
-    </div>
 
-    <h3 style="color: white; text-align: center;">Recent Job Posts</h3>
-    {% if recent_jobs %}
-    <ul class="job-list">
-      {% for job in recent_jobs %}
-      <li>
-        <strong>{{ job['title'] }}</strong><br>
-        <em>Skills:</em> {{ job['skills'] }}<br>
-        <small>Posted on {{ job['created_at'] }}</small>
-        <div class="btn-group">
-          <a href="{{ url_for('edit_job', job_id=job['id']) }}" class="btn btn-edit">Edit</a>
-          <a href="{{ url_for('delete_job', job_id=job['id']) }}" class="btn btn-delete"
-            onclick="return confirm('Are you sure you want to delete this job?');">Delete</a>
+    <div id="stats-container" class="stats-container">
+      <div class="card magic-card">
+        <div class="card-front">
+          <div class="firstPart">
+            <h3>Total Jobs</h3>
+          </div>
+          <div class="container-text">
+            <p>{{ total_jobs }}</p>
+          </div>
         </div>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p style="color: white; text-align: center;">No jobs posted yet.</p>
-    {% endif %}
-  </div>
+        <div class="card-overlay">
+          <div class="firstPart">
+            <h3>All Job Postings</h3>
+          </div>
+          <div class="container-text">
+            <p>These are the jobs you've posted.</p>
+          </div>
+        </div>
+      </div>
 
+      <div class="card magic-card">
+        <div class="card-front">
+          <div class="firstPart">
+            <h3>Resumes Uploaded</h3>
+          </div>
+          <div class="container-text">
+            <p>{{ total_resumes }}</p>
+          </div>
+        </div>
+        <div class="card-overlay">
+          <div class="firstPart">
+            <h3>Uploaded Resumes</h3>
+          </div>
+          <div class="container-text">
+            <p>Count of resumes submitted by candidates.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card magic-card">
+        <div class="card-front">
+          <div class="firstPart">
+            <h3>Shortlisted</h3>
+          </div>
+          <div class="container-text">
+            <p>{{ shortlisted_count }}</p>
+          </div>
+        </div>
+        <div class="card-overlay">
+          <div class="firstPart">
+            <h3>Selected Candidates</h3>
+          </div>
+          <div class="container-text">
+            <p>These are candidates selected based on skills.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="cards-container">
+      {% for job in recent_jobs %}
+      <div class="card recent-job-card" data-rotation-factor="2">
+        <div class="card-content">
+          <h2>{{ job['title'] }}</h2>
+          <p><strong>Skills:</strong> {{ job['skills'] }}</p>
+          <p><small>Posted on {{ job['created_at'] }}</small></p>
+          <div class="card-footer">
+            <a href="{{ url_for('edit_job', job_id=job['id']) }}" class="card-button btn-edit">Edit</a>
+            <a href="{{ url_for('delete_job', job_id=job['id']) }}" class="card-button btn-delete"
+              onclick="return confirm('Are you sure you want to delete this job?');">Delete</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script>
+
     const hamburger = document.getElementById('hamburger');
     const sidebar = document.getElementById('sidebar');
 
@@ -275,6 +482,54 @@
       });
       document.getElementById(statId).style.display = 'block';
     }
+
+    // For simple hover glow effect on .card
+    const basicCards = document.querySelectorAll('.card');
+    basicCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--x', `${x}px`);
+        card.style.setProperty('--y', `${y}px`);
+      });
+    });
+
+    // For animated magic cards with overlay
+    const magicCards = document.querySelectorAll(".magic-card");
+
+    magicCards.forEach((card) => {
+      const overlay = card.querySelector(".card-overlay");
+
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+        const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+
+        const distX = Math.abs(50 - mouseX);
+        const distY = Math.abs(50 - mouseY);
+        const dist = Math.min(Math.sqrt(distX ** 2 + distY ** 2), 50);
+
+        document.documentElement.style.setProperty("--circle-size", `${dist}%`);
+        document.documentElement.style.setProperty("--x", `${mouseX}%`);
+        document.documentElement.style.setProperty("--y", `${mouseY}%`);
+
+        gsap.to(overlay, { opacity: 1 });
+      });
+
+      card.addEventListener("mouseleave", () => {
+        document.documentElement.style.setProperty("--circle-size", "0%");
+        gsap.to(overlay, { opacity: 0 });
+      });
+
+      card.addEventListener("click", () => {
+        document.documentElement.style.setProperty("--circle-size", "100%");
+      });
+    });
+
+
+
+
   </script>
 </body>
 
