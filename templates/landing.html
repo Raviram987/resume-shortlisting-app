@@ -22,8 +22,8 @@
     <div class="header-container">
       <h2 class="logo">ResumeAI</h2>
       <nav class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#about">About</a>
+        <a href="{{ url_for('features') }}" class="nav-link">Features</a>
+        <a href="{{ url_for('about') }}">About</a>
         <a href="{{ url_for('login') }}">Get Demo</a>
       </nav>
     </div>

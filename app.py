@@ -83,7 +83,8 @@ def login():
 def logout():
     session.pop('user', None)
     flash('Logged out successfully.')
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))  # Redirecting to landing page instead of login
+
 
 @app.route('/dashboard')
 def dashboard():

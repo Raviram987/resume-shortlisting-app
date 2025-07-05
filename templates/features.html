@@ -1,30 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Features - AI Resume Shortlisting</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='landing/style.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feature Cards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #161623;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      z-index: 1;
+      padding: 40px 20px;
+      max-width: 1200px;
+    }
+
+    .card {
+      position: relative;
+      width: 350px;
+      height: 550px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(15px);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      transition: all 0.5s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      color: white;
+      height: 100%;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 200px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover .card-image img {
+      transform: scale(1.1);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, #fff, #a3a3a3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+
+    .card-text {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+    }
+
+    .card-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: auto;
+      padding: 15px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, #64ffda, #00bcd4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .type {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+    }
+
+    .card-button {
+      padding: 10px 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 10px;
+      align-self: center;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .card-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .ripple {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple-effect 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-effect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: float 8s infinite alternate ease-in-out;
+    }
+
+    .shape1 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(45deg, #ff3998, #ff5f99);
+      top: -100px;
+      right: -100px;
+    }
+
+    .shape2 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(45deg, #0061ff, #60efff);
+      bottom: -100px;
+      left: -100px;
+    }
+
+    .shape3 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(45deg, #7700ff, #4400ff);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        transform: translate(-40px, 20px) scale(1.1);
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <header>
-    <h1>Key Features</h1>
-    <a href="{{ url_for('home') }}">Home</a>
-    <a href="{{ url_for('about') }}">About</a>
-    <a href="{{ url_for('login') }}">Login</a>
-  </header>
+  <div class="container">
+    <div class="card">
+      <div class="card-content">
+        <div class="card-image">
+          <img src="static/features_1.png" alt="Glassmorphism Design">
+        </div>
+        <h2 class="card-title">AI Resume Match</h2>
+        <p class="card-text">Intelligently match resumes with job skills using NLP-powered algorithms.</p>
+        <div class="card-stats">
+          <div class="stat"><div class="value">95%</div><div class="type">Accuracy</div></div>
+          <div class="stat"><div class="value">80%</div><div class="type">Speed</div></div>
+          <div class="stat"><div class="value">90%</div><div class="type">Efficiency</div></div>
+        </div>
+        <a href="{{url_for('login')}}"><button class="card-button">Try Now</button></a>
+      </div>
+    </div>
 
-  <main>
-    <ul>
-      <li> Resume Parsing</li>
-      <li> NLP Skill Matching</li>
-      <li> ML-Based Shortlisting</li>
-      <li> Recruiter Dashboard</li>
-      <li> CSV/Excel Export</li>
-    </ul>
-  </main>
+    <div class="card">
+      <div class="card-content">
+        <div class="card-image">
+          <img src="static/features_2.png" alt="Modern Aesthetics">
+        </div>
+        <h2 class="card-title">Job Posting</h2>
+        <p class="card-text">Quickly post job openings and instantly begin resume collection and ranking.</p>
+        <div class="card-stats">
+          <div class="stat"><div class="value">70%</div><div class="type">Faster</div></div>
+          <div class="stat"><div class="value">100%</div><div class="type">Live</div></div>
+          <div class="stat"><div class="value">85%</div><div class="type">Uptime</div></div>
+        </div>
+        <a href="{{url_for('login')}}"><button class="card-button">Post Job</button></a>
+      </div>
+    </div>
+  </div>
 
-  <footer>
-    <p>© 2025 AI Resume Shortlisting. All rights reserved.</p>
-  </footer>
+  <div class="background">
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+    <div class="shape shape3"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const cards = document.querySelectorAll(".card");
+
+      cards.forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          const rotateY = (x / rect.width - 0.5) * 10;
+          const rotateX = (y / rect.height - 0.5) * -10;
+
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-15px)`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "translateY(-15px)";
+        });
+
+        card.addEventListener("click", () => {
+          card.classList.add("card-click");
+          setTimeout(() => {
+            card.classList.remove("card-click");
+          }, 300);
+        });
+      });
+
+      const buttons = document.querySelectorAll(".card-button");
+      buttons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const ripple = document.createElement("span");
+          ripple.className = "ripple";
+          button.appendChild(ripple);
+
+          const rect = button.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          ripple.style.left = `${x}px`;
+          ripple.style.top = `${y}px`;
+
+          setTimeout(() => {
+            ripple.remove();
+          }, 600);
+        });
+      });
+    });
+  </script>
 </body>
 </html>

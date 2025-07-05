@@ -1,24 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>About Us - AI Resume Shortlisting</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='landing/style.css') }}">
+  <meta charset="UTF-8" />
+  <title>Meet Our Team - Resume Screener</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --surface-1: oklch(20% 0.03 269);
+      --surface-2: oklch(26% 0.04 269);
+      --text-1: oklch(91% 0.03 61);
+      --body: 400 1rem/1.5rem system-ui, sans-serif;
+      --display: 400 3.562rem/4rem system-ui, sans-serif;
+      --display-small: 400 2.25rem/2.75rem system-ui, sans-serif;
+      --label: 500 0.875rem/1.25rem system-ui, sans-serif;
+      --title: 400 1.375rem/1.75rem system-ui, sans-serif;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100vh;
+      font: var(--body);
+      background: var(--surface-1);
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    .section {
+      display: grid;
+      place-items: center;
+      padding: 80px 20px;
+      overflow-x: hidden;
+    }
+
+    .section-wrapper {
+      display: grid;
+      place-items: center;
+      gap: 2rem;
+    }
+
+    .header {
+      text-align: center;
+    }
+
+    .headline {
+      font: var(--display-small);
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      opacity: 0.7;
+    }
+
+    .section-link {
+      margin-top: 1rem;
+      text-decoration: underline;
+      font: var(--label);
+      color: var(--text-1);
+      display: inline-block;
+    }
+
+    .cards {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding-top: 32px;
+      list-style: none;
+    }
+
+    .card {
+      background: var(--surface-2);
+      padding: 1rem;
+      border-radius: 20px;
+      width: 220px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    .visual {
+      border-radius: 50%;
+      overflow: hidden;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1rem auto;
+    }
+
+    .visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .visual img {
+      transform: scale(1.05);
+    }
+
+    .tooltiptext {
+      display: grid;
+      gap: 0.3rem;
+    }
+
+    .team-name {
+      font: var(--title);
+    }
+
+    .team-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .team-bio {
+      font-size: 0.85rem;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 768px) {
+      .headline { font-size: 1.75rem; }
+      .cards { flex-direction: column; align-items: center; }
+    }
+  </style>
 </head>
+
 <body>
-  <header>
-    <h1>About Our Project</h1>
-    <a href="{{ url_for('home') }}">Home</a>
-    <a href="{{ url_for('features') }}">Features</a>
-    <a href="{{ url_for('login') }}">Login</a>
-  </header>
+  <section class="section">
+    <div class="section-wrapper">
+      <header class="header">
+        <h2 class="headline">Meet Our Team</h2>
+        <p class="tagline">Creative minds behind the Resume Shortlisting System</p>
+        <a href="/" class="section-link">← Back to Home</a>
+      </header>
 
-  <main>
-    <p>This project automates the recruitment process using AI and NLP. It helps recruiters filter and rank resumes smartly based on job descriptions.</p>
-  </main>
+      <ul class="cards">
+        <!-- Ravi -->
+        <li class="card">
+          <div class="visual">
+            <img src="https://via.placeholder.com/150x150.png?text=Ravi" alt="Ravi Ram" />
+          </div>
+          <div class="tooltiptext">
+            <h3 class="team-name">Ravi Ram</h3>
+            <p class="team-title">AI/ML Developer</p>
+            <p class="team-bio">Architect of the Resume Shortlisting System, specializing in NLP and Flask.</p>
+          </div>
+        </li>
 
-  <footer>
-    <p>© 2025 AI Resume Shortlisting. All rights reserved.</p>
-  </footer>
+        <!-- Sneha -->
+        <li class="card">
+          <div class="visual">
+            <img src="https://via.placeholder.com/150x150.png?text=Sneha" alt="Sneha" />
+          </div>
+          <div class="tooltiptext">
+            <h3 class="team-name">Sneha P.</h3>
+            <p class="team-title">UI/UX Designer</p>
+            <p class="team-bio">Crafting intuitive interfaces and elegant designs for recruiters and users.</p>
+          </div>
+        </li>
+
+        <!-- Ayush -->
+        <li class="card">
+          <div class="visual">
+            <img src="https://via.placeholder.com/150x150.png?text=Ayush" alt="Ayush" />
+          </div>
+          <div class="tooltiptext">
+            <h3 class="team-name">Ayush Kumar</h3>
+            <p class="team-title">Backend Engineer</p>
+            <p class="team-bio">API architect managing job/resume data flow and secure login systems.</p>
+          </div>
+        </li>
+
+        <!-- Megha -->
+        <li class="card">
+          <div class="visual">
+            <img src="https://via.placeholder.com/150x150.png?text=Megha" alt="Megha" />
+          </div>
+          <div class="tooltiptext">
+            <h3 class="team-name">Megha R.</h3>
+            <p class="team-title">Project Manager</p>
+            <p class="team-bio">Keeping deliverables aligned and cross-functional teams in sync.</p>
+          </div>
+        </li>
+
+        <!-- Codey -->
+        <li class="card">
+          <div class="visual">
+            <img src="https://via.placeholder.com/150x150.png?text=Codey+X" alt="Codey X" />
+          </div>
+          <div class="tooltiptext">
+            <h3 class="team-name">Codey X</h3>
+            <p class="team-title">AI Assistant</p>
+            <p class="team-bio">Your friendly LLM-powered resume parser and feedback engine.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
 </body>
 </html>
