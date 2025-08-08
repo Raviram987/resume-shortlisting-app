@@ -1,133 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Post a Job</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        /* Gradient background like previous pages */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 40px 20px;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            color: #343a40;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post a Job</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
-        /* White translucent container */
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            max-width: 500px;
-            width: 100%;
-            padding: 30px 40px;
-            border-radius: 15px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        h2 {
-            margin-bottom: 24px;
-            color: #4b2cc8;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        form input[type="text"],
-        form textarea {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 18px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        form input[type="text"]:focus,
-        form textarea:focus {
-            border-color: #764ba2;
-            outline: none;
-        }
-
-        form textarea {
-            resize: vertical;
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: #4b2cc8;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-weight: 600;
-        }
-
-        button:hover {
-            background-color: #36238f;
-        }
-
-        .message {
-            background-color: #dff0d8;
-            border: 1px solid #d0e9c6;
-            color: #3c763d;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-        }
-
-        p.links {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        p.links a {
-            margin: 0 10px;
-            color: #764ba2;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        p.links a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <!-- Embedded CSS -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Space Grotesk', monospace;
+      background-image: linear-gradient(
+        230deg,
+        hsl(244deg 19% 15%) 0%,
+        hsl(251deg 20% 15%) 8%,
+        hsl(258deg 21% 16%) 17%,
+        hsl(266deg 21% 16%) 25%,
+        hsl(273deg 21% 16%) 33%,
+        hsl(280deg 21% 17%) 42%,
+        hsl(288deg 22% 17%) 50%,
+        hsl(297deg 22% 17%) 58%,
+        hsl(305deg 23% 17%) 67%,
+        hsl(312deg 25% 18%) 75%,
+        hsl(318deg 27% 19%) 83%,
+        hsl(323deg 29% 19%) 92%,
+        hsl(327deg 31% 20%) 100%
+      );
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .container {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border: 2px solid #4a4a4a;
+      border-radius: 24px;
+      padding: 60px 50px;
+      max-width: 800px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1),
+                  0 20px 40px rgba(0, 0, 0, 0.5),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24, #ff6b6b);
+      border-radius: 26px;
+      z-index: -1;
+      opacity: 0.3;
+      animation: borderGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes borderGlow { 0% { opacity: 0.3; } 100% { opacity: 0.5; } }
+    .title {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 700;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .button {
+      background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+      border: 2px solid #444;
+      color: #ffffff;
+      padding: 18px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+      min-width: 160px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .button::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    .button:hover { border-color: #ff6b6b; box-shadow: 0 0 20px rgba(255, 107, 107, 0.3); transform: translateY(-2px); }
+    .button:hover::before { left: 100%; }
+    .button:active { transform: translateY(0); }
+    input, textarea {
+      width: 100%;
+      background: #2a2a2a;
+      border: 2px solid #444;
+      color: #fff;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: 20px;
+      resize: vertical;
+    }
+    input:focus, textarea:focus {
+      border-color: #ff6b6b;
+      outline: none;
+    }
+    .notification {
+      position: fixed;
+      background: #1a1a1a;
+      color: white;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      padding: 24px 24px;
+      width: 380px;
+      height: 120px;
+      z-index: 1000;
+      border-radius: 8px;
+      border: 2px solid #333;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: slideInFromRight 0.5s ease-out;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .notification::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+    }
+    .notification.success::before { background: linear-gradient(135deg, #4ecdc4, #26d0ce); }
+    .notification.warning::before { background: linear-gradient(135deg, #f9ca24, #f39c12); }
+    .notification.error::before { background: linear-gradient(135deg, #ff6b6b, #e74c3c); }
+    .notification.info::before { background: linear-gradient(135deg, #45b7d1, #3498db); }
+    @keyframes slideInFromRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    .notification-header { display: flex; align-items: center; margin-bottom: 12px; }
+    .notification-icon {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      margin-right: 12px; font-size: 16px; font-weight: bold;
+      border-radius: 4px; flex-shrink: 0;
+    }
+    .notification.success .notification-icon { color: #4ecdc4; }
+    .notification.warning .notification-icon { color: #f9ca24; }
+    .notification.error .notification-icon { color: #ff6b6b; }
+    .notification.info .notification-icon { color: #45b7d1; }
+    .notification-title { font-weight: 600; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .notification-message { color: #e0e0e0; line-height: 1.5; font-size: 0.95rem; }
+    .close-button {
+      position: absolute; top: 8px; right: 8px;
+      background: none; border: none; color: #999;
+      font-size: 18px; cursor: pointer; width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; transition: all 0.2s ease;
+    }
+    .close-button:hover { background: rgba(255, 107, 107, 0.1); color: #ff6b6b; }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <h2>Post a New Job</h2>
+  <div class="container">
+    <h1 class="title">Post a New Job</h1>
 
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="message">
-            {% for message in messages %}
-            <p>{{ message }}</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            {% for category, message in messages %}
+              showNotification('{{ category }}', '{{ category|capitalize }}', '{{ message }}',
+                {% if category == 'success' %}'✓'
+                {% elif category == 'warning' %}'⚠'
+                {% elif category == 'error' %}'✕'
+                {% else %}'i'
+                {% endif %}
+              );
             {% endfor %}
-        </div>
-        {% endif %}
-        {% endwith %}
+          });
+        </script>
+      {% endif %}
+    {% endwith %}
 
-        <form method="POST">
-            <input type="text" name="title" placeholder="Job Title" required>
-            <textarea name="description" placeholder="Job Description" rows="5" required></textarea>
-            <input type="text" name="skills" placeholder="Required Skills (comma separated)" required>
-            <button type="submit">Post Job</button>
-        </form>
-
-        <p class="links">
-            <a href="{{ url_for('list_jobs') }}">View All Jobs</a> |
-            <a href="{{ url_for('home') }}">Home</a>
-        </p>
+    <form method="POST">
+      <input type="text" name="title" placeholder="Job Title" required>
+      <textarea name="description" placeholder="Job Description" required></textarea>
+      <input type="text" name="skills" placeholder="Required Skills (comma separated)" required>
+      <button type="submit" class="button">Post Job</button>
+    </form>
+    <div class="controls" style="margin-top:20px;">
+      <a href="{{ url_for('list_jobs') }}" class="button">View All Jobs</a>
+      <a href="{{ url_for('home') }}" class="button">Home</a>
     </div>
-</body>
+  </div>
 
+  <!-- Embedded JS -->
+  <script>
+    function showNotification(type, title, message, icon) {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.innerHTML = `
+        <button class="close-button" onclick="removeNotification(this.parentElement)">×</button>
+        <div class="notification-header">
+          <div class="notification-icon">${icon}</div>
+          <div class="notification-title">${title}</div>
+        </div>
+        <div class="notification-message">${message}</div>
+      `;
+      const existingNotifications = document.querySelectorAll('.notification');
+      const topOffset = 30 + (existingNotifications.length * 136);
+      notification.style.top = `${topOffset}px`;
+      notification.style.right = '30px';
+      document.body.appendChild(notification);
+      setTimeout(() => { removeNotification(notification); }, 5000);
+    }
+    function removeNotification(notification) {
+      notification.style.animation = 'slideOutRight 0.3s ease-in forwards';
+      setTimeout(() => { if (notification.parentElement) { notification.remove(); } }, 300);
+    }
+    function showSuccessNotification() {
+      showNotification('success', 'Success', 'Operation completed successfully. All systems online.', '✓');
+    }
+    function showWarningNotification() {
+      showNotification('warning', 'Warning', 'System anomaly detected. Please review configuration settings.', '⚠');
+    }
+    function showErrorNotification() {
+      showNotification('error', 'Error', 'Critical system failure detected. Immediate attention required.', '✕');
+    }
+    function showInfoNotification() {
+      showNotification('info', 'Information', 'New system update available. Click to learn more.', 'i');
+    }
+  </script>
+</body>
 </html>

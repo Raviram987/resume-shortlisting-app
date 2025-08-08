@@ -1,536 +1,601 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recruiter Dashboard</title>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-
-
-    <!-- Fonts and CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Inter font (already likely included) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-
-    <!-- GSAP for animation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for hamburger icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-      .animated-gradient-bg {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
-}
-
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-      body {
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: #333;
-        transition: all 0.3s ease-in-out;
-      }
-
-      .topbar,
-      .hamburger {
-        position: fixed;
-        z-index: 1000;
-      }
-
-      .hamburger {
-        top: 20px;
-        left: 20px;
-        font-size: 28px;
-        color: white;
-        cursor: pointer;
-      }
-
-      .topbar {
-        top: 20px;
-        right: 30px;
-      }
-
-      .profile-link {
-        padding: 10px 18px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        text-decoration: none;
-        font-weight: 600;
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-      }
-
-      .profile-link:hover {
-        background-color: rgba(255, 255, 255, 0.3);
-      }
-
-      .sidebar {
-        position: fixed;
-        top: 0;
-        left: -260px;
-        width: 260px;
-        height: 100vh;
-        background-color: #311b92;
-        padding-top: 70px;
-        color: white;
-        transition: left 0.3s ease;
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
-      }
-
-      .sidebar.active {
-        left: 0;
-      }
-
-      .sidebar a {
-        display: block;
-        padding: 15px 30px;
-        color: white;
-        text-decoration: none;
-        font-weight: 600;
-      }
-
-      .sidebar a:hover {
-        background-color: #4527a0;
-      }
-
-      .logout-btn {
-        background-color: #e53935 !important;
-      }
-
-      .content {
-        padding: 100px 30px 30px;
-        max-width: 1100px;
-        margin: auto;
-      }
-
-      h2 {
-        text-align: center;
-        color: white;
-        margin-bottom: 30px;
-        font-weight: 700;
-      }
-
-      .stat-toggle {
-        padding: 10px 20px;
-        margin: 10px 10px 30px;
-        background-color: white;
-        color: #4527a0;
-        border: 2px solid #4527a0;
-        border-radius: 10px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      .stat-toggle:hover {
-        background-color: #4527a0;
-        color: white;
-      }
-
-      .stat-card {
-        max-width: 320px;
-        margin: 0 auto 30px;
-        padding: 30px;
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        animation: fade 0.4s ease;
-      }
-
-      .card-jobs {
-        border-top: 6px solid #29b6f6;
-      }
-
-      .card-resumes {
-        border-top: 6px solid #ffb74d;
-      }
-
-      .card-shortlisted {
-        border-top: 6px solid #66bb6a;
-      }
-
-      @keyframes fade {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
+        :root {
+            --primary-dark: #1a202c; /* Deeper charcoal for primary elements */
+            --secondary-dark: #2d3748; /* Slightly lighter charcoal for secondary elements */
+            --text-light: #f7fafc; /* Off-white for text on dark backgrounds */
+            --bg-light: #edf2f7; /* Very light grey for main background */
+            --card-bg: #ffffff; /* White for cards */
+            --border-light: #e2e8f0; /* Light grey for borders */
+            --accent-blue: #4299e1; /* Professional blue for accents */
+            --accent-green: #48bb78; /* Muted green for success/edit */
+            --accent-red: #f56565; /* Muted red for danger/delete */
+            --accent-yellow: #ecc94b; /* Muted yellow for warnings */
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        to {
-          opacity: 1;
-          transform: translateY(0);
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--primary-dark);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll when sidebar is off-screen */
         }
-      }
 
-      .job-list li {
-        background: white;
-        border-radius: 12px;
-        padding: 18px 22px;
-        margin-bottom: 15px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-      }
-
-      .job-list li strong {
-        font-size: 19px;
-        color: #311b92;
-      }
-
-      .btn-group .btn {
-        display: inline-block;
-        padding: 10px 16px;
-        border-radius: 8px;
-        font-weight: 600;
-        margin-top: 12px;
-        margin-right: 10px;
-        text-decoration: none;
-        color: white;
-        transition: transform 0.2s ease;
-      }
-
-      .btn-edit {
-        background-color: #43a047;
-      }
-
-      .btn-delete {
-        background-color: #e53935;
-      }
-
-      .btn:hover {
-        transform: scale(1.07);
-      }
-
-      @media (max-width: 768px) {
-        .stat-toggle {
-          display: block;
-          margin: 10px auto;
+        body.no-scroll {
+            overflow: hidden; /* Prevent body scroll when sidebar is open on mobile */
         }
-      }
 
-      :root {
-        --color-bg: #050505;
-        --color-text: #ffffff;
-        --color-primary: #ff3366;
-        --color-secondary: #3366ff;
-        --color-tertiary: #33ddff;
-        --color-accent: #ffcc00;
-        --card-radius: 16px;
-        --card-bg: rgba(255, 255, 255, 0.03);
-        --card-border: rgba(255, 255, 255, 0.1);
-        --card-shadow: 0 15px 30px -12px rgba(0, 0, 0, 0.5);
-        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
 
-      .cards-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
-        padding: 0 1rem;
-      }
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 300px; /* Width of the sidebar */
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            /* Default for desktop: always visible */
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out; /* Smooth transition for sliding */
+            z-index: 1000; /* Ensure it's above other content when open */
+        }
 
-      .card.recent-job-card {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 16px;
-        padding: 1.5rem;
-        color: #fff;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-        transition: transform 0.4s ease;
-        position: relative;
-        overflow: hidden;
-      }
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--secondary-dark);
+            margin-bottom: 1.5rem;
+        }
 
-      .card.recent-job-card:hover {
-        transform: translateY(-5px);
-      }
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            cursor: pointer; /* Indicate it's clickable */
+            white-space: nowrap; /* Ensures the text stays on one line */
+        }
 
-      .card-content h2 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        color: #fff;
-      }
+        .sidebar-logo .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent-yellow);
+            margin-left: 8px;
+        }
 
-      .card-content p {
-        font-size: 0.95rem;
-        color: #ccc;
-        margin-bottom: 0.5rem;
-      }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
 
-      .card-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 1.2rem;
-      }
+        .nav-list-item {
+            margin-bottom: 0.5rem;
+        }
 
-      .card-button {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: #fff;
-        padding: 0.6rem 1.2rem;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 0.85rem;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-      }
+        .nav-list-item a,
+        .nav-list-item span {
+            display: block;
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            border-left: 4px solid transparent;
+        }
 
-      .card-button:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
-      }
+        .nav-list-item a:hover,
+        .nav-list-item span.active {
+            background-color: var(--secondary-dark);
+            color: var(--accent-blue);
+            border-left-color: var(--accent-blue);
+        }
 
-      .btn-edit {
-        background-color: rgba(67, 160, 71, 0.3);
-      }
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative; /* For hamburger button positioning */
+        }
 
-      .btn-delete {
-        background-color: rgba(229, 57, 53, 0.3);
-      }
+        .page-header-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
 
-      :root {
-        --circle-size: 0%;
-        --x: 50%;
-        --y: 50%;
-      }
+        .hamburger-menu {
+            display: none; /* Hidden by default on desktop */
+            background: none;
+            border: none;
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            cursor: pointer;
+            margin-right: 1rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: background-color 0.2s ease-in-out;
+        }
 
-      .stats-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 2rem;
-        margin-top: 40px;
-      }
+        .hamburger-menu:hover {
+            background-color: var(--border-light);
+        }
 
-      .magic-card {
-        position: relative;
-        width: 280px;
-        border-radius: 20px;
-        overflow: hidden;
-        background: white;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        transition: 0.4s ease-in-out;
-      }
+        .page-header {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 0; /* Reset margin as it's now in a flex container */
+        }
 
-      .card-front,
-      .card-overlay {
-        width: 100%;
-        padding: 30px;
-        border-radius: 20px;
-      }
+        /* --- Stats Cards --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
 
-      .card-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        clip-path: circle(var(--circle-size) at var(--x) var(--y));
-        opacity: 0;
-        background-color: #0be477;
-        transition: clip-path 0.3s ease, opacity 0.3s ease;
-      }
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border-bottom: 4px solid var(--accent-blue);
+        }
 
-      .firstPart {
-        text-align: center;
-        margin-bottom: 10px;
-      }
+        .stat-card.jobs { border-bottom-color: var(--accent-blue); }
+        .stat-card.resumes { border-bottom-color: var(--accent-yellow); }
+        .stat-card.shortlisted { border-bottom-color: var(--accent-green); }
 
-      .container-text {
-        text-align: center;
-        font-size: 1.1rem;
-        font-weight: 500;
-      }
+        .stat-card-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .stat-card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* --- Recent Activities / Job Listings --- */
+        .section-header {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            background: var(--card-bg);
+            padding: 1.2rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .activity-details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            font-size: 1rem;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--secondary-dark);
+        }
+
+        .activity-meta {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text-light);
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-edit { background-color: var(--accent-green); }
+        .btn-edit:hover { background-color: #38a169; transform: translateY(-1px); }
+
+        .btn-delete { background-color: var(--accent-red); }
+        .btn-delete:hover { background-color: #e53e3e; transform: translateY(-1px); }
+
+        /* --- Right Sidebar (Quick Stats) --- */
+        .right-sidebar {
+            width: 300px;
+            background-color: var(--card-bg);
+            padding: 2rem 1.5rem;
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .right-sidebar-header {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-stats-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* Added gap for consistency */
+        }
+
+        .quick-stat-item {
+            background-color: var(--bg-light);
+            padding: 1.2rem;
+            border-left: 6px solid;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quick-stat-item.blue { border-color: var(--accent-blue); }
+        .quick-stat-item.yellow { border-color: var(--accent-yellow); }
+        .quick-stat-item.green { border-color: var(--accent-green); }
+
+        .quick-stat-label {
+            font-weight: 600;
+            color: var(--secondary-dark);
+            font-size: 1rem;
+        }
+
+        .quick-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* --- Overlay for Hamburger Menu --- */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            z-index: 999; /* Below sidebar, above main content */
+        }
+
+        .overlay.is-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                padding: 1.5rem 2rem;
+            }
+            .right-sidebar {
+                width: 250px;
+            }
+            .page-header {
+                font-size: 1.8rem;
+            }
+            .section-header, .right-sidebar-header {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: fixed; /* Fixed for hamburger menu */
+                height: 100vh;
+                width: 800px; /* Fixed width for sliding on mobile */
+                left: 0;
+                top: 0;
+                transform: translateX(-100%); /* Off-screen initially on mobile */
+                box-shadow: var(--shadow-md); /* Keep shadow for sliding effect */
+            }
+
+            .sidebar.is-open {
+                transform: translateX(0); /* Slide into view on mobile */
+            }
+
+            .hamburger-menu {
+                display: block; /* Show hamburger on mobile */
+            }
+
+            .main-content, .right-sidebar {
+                width: auto;
+                padding: 1.5rem;
+                box-shadow: none;
+                position: static;
+                height: auto;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .action-buttons {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .right-sidebar {
+                order: -1; /* Move quick stats above main content on mobile */
+                padding-bottom: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                font-size: 1.6rem;
+            }
+            .section-header, .right-sidebar-header {
+                font-size: 1.2rem;
+            }
+            .stat-card-value {
+                font-size: 1.8rem;
+            }
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
     </style>
-  </head>
-
+</head>
 <body>
-  <div class="hamburger" id="hamburger">&#9776;</div>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo" id="sidebar-logo-toggle">
+                    RecruitPro<span class="dot"></span>
+                </div>
+            </div>
+            <nav>
+                <ul class="nav-list">
+                    <li class="nav-list-item"><span class="active">Dashboard</span></li>
+                    <li class="nav-list-item"><a href="{{ url_for('post_job') }}">Post New Job</a></li>
+                    <li class="nav-list-item"><a href="{{ url_for('list_jobs') }}">Job Listings</a></li>
+                    <li class="nav-list-item"><a href="{{ url_for('upload_resume') }}">Upload Resume</a></li>
+                    <li class="nav-list-item"><a href="{{ url_for('list_resumes') }}">View Resumes</a></li>
+                    <!-- <li class="nav-list-item"><a href="{{ url_for('resume_form') }}">Build Resume</a></li> -->
+                    <li class="nav-list-item"><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
 
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="page-header-wrapper">
+                <button class="hamburger-menu" id="hamburger-menu" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-header">Welcome, {{ user }}</h1>
+            </div>
 
-  <nav class="sidebar" id="sidebar">
-    <a href="{{ url_for('dashboard') }}">Dashboard</a>
-    <a href="{{ url_for('post_job') }}">Post a Job</a>
-    <a href="{{ url_for('list_jobs') }}">Job Listings</a>
-    <a href="{{ url_for('upload_resume') }}">Upload Resume</a>
-    <a href="{{ url_for('list_resumes') }}">View Resumes</a>
-    <a href="{{ url_for('resume_form') }}">Build Resume</a>
-    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
-  </nav>
-  <div class="animated-gradient-bg"></div>
+            <!-- Key Statistics Section -->
+            <section class="stats-grid">
+                <div class="stat-card jobs">
+                    <span class="stat-card-label">Total Jobs Posted</span>
+                    <strong class="stat-card-value">{{ total_jobs }}</strong>
+                </div>
+                <div class="stat-card resumes">
+                    <span class="stat-card-label">Resumes Uploaded</span>
+                    <strong class="stat-card-value">{{ total_resumes }}</strong>
+                </div>
+                <div class="stat-card shortlisted">
+                    <span class="stat-card-label">Candidates Shortlisted</span>
+                    <strong class="stat-card-value">{{ shortlisted_count }}</strong>
+                </div>
+            </section>
 
-  <div class="content" id="content">
-    <h2>Welcome, {{ user }}</h2>
+            <!-- Recent Job Postings Section -->
+            <section class="recent-jobs-section">
+                <h2 class="section-header">Your Recent Job Postings</h2>
+                <div class="activity-list">
+                    {% for job in recent_jobs %}
+                    <div class="activity-item">
+                        <div class="activity-details">
+                            <div class="activity-title">{{ job['title'] }}</div>
+                            <div class="activity-meta">Skills: {{ job['skills'] }} | Posted: {{ job['created_at'] }}</div>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('edit_job', job_id=job['id']) }}" class="btn btn-edit">Edit</a>
+                            <a href="{{ url_for('delete_job', job_id=job['id']) }}" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this job? This action cannot be undone.');">Delete</a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p>No recent job postings to display.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </main>
 
+        <!-- Right Sidebar for Quick Stats -->
+        <aside class="right-sidebar">
+            <h2 class="right-sidebar-header">Quick Overview</h2>
+            <div class="quick-stats-list">
+                <div class="quick-stat-item blue">
+                    <div class="quick-stat-label">Total Jobs Posted</div>
+                    <div class="quick-stat-value">{{ total_jobs }}</div>
+                </div>
+                <div class="quick-stat-item yellow">
+                    <div class="quick-stat-label">Total Resumes Uploaded</div>
+                    <div class="quick-stat-value">{{ total_resumes }}</div>
+                </div>
+                <div class="quick-stat-item green">
+                    <div class="quick-stat-label">Total Shortlisted</div>
+                    <div class="quick-stat-value">{{ shortlisted_count }}</div>
+                </div>
+            </div>
+            <div class="quick-stat-item">
+                <div class="quick-stat-label">Recent Jobs Listed</div>
+                <div class="quick-stat-value">{{ recent_jobs|length }}</div>
+            </div>
+        </aside>
 
-
-    <div id="stats-container" class="stats-container">
-      <div class="card magic-card">
-        <div class="card-front">
-          <div class="firstPart">
-            <h3>Total Jobs</h3>
-          </div>
-          <div class="container-text">
-            <p>{{ total_jobs }}</p>
-          </div>
-        </div>
-        <div class="card-overlay">
-          <div class="firstPart">
-            <h3>All Job Postings</h3>
-          </div>
-          <div class="container-text">
-            <p>These are the jobs you've posted.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card magic-card">
-        <div class="card-front">
-          <div class="firstPart">
-            <h3>Resumes Uploaded</h3>
-          </div>
-          <div class="container-text">
-            <p>{{ total_resumes }}</p>
-          </div>
-        </div>
-        <div class="card-overlay">
-          <div class="firstPart">
-            <h3>Uploaded Resumes</h3>
-          </div>
-          <div class="container-text">
-            <p>Count of resumes submitted by candidates.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card magic-card">
-        <div class="card-front">
-          <div class="firstPart">
-            <h3>Shortlisted</h3>
-          </div>
-          <div class="container-text">
-            <p>{{ shortlisted_count }}</p>
-          </div>
-        </div>
-        <div class="card-overlay">
-          <div class="firstPart">
-            <h3>Selected Candidates</h3>
-          </div>
-          <div class="container-text">
-            <p>These are candidates selected based on skills.</p>
-          </div>
-        </div>
-      </div>
+        <!-- Overlay for mobile menu -->
+        <div class="overlay" id="overlay"></div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerMenu = document.getElementById('hamburger-menu');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const body = document.body;
+            const sidebarLogoToggle = document.getElementById('sidebar-logo-toggle'); // Get the logo element
 
-    <div class="cards-container">
-      {% for job in recent_jobs %}
-      <div class="card recent-job-card" data-rotation-factor="2">
-        <div class="card-content">
-          <h2>{{ job['title'] }}</h2>
-          <p><strong>Skills:</strong> {{ job['skills'] }}</p>
-          <p><small>Posted on {{ job['created_at'] }}</small></p>
-          <div class="card-footer">
-            <a href="{{ url_for('edit_job', job_id=job['id']) }}" class="card-button btn-edit">Edit</a>
-            <a href="{{ url_for('delete_job', job_id=job['id']) }}" class="card-button btn-delete"
-              onclick="return confirm('Are you sure you want to delete this job?');">Delete</a>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
+            // Function to open the sidebar
+            function openSidebar() {
+                sidebar.classList.add('is-open');
+                overlay.classList.add('is-visible');
+                body.classList.add('no-scroll');
+                hamburgerMenu.setAttribute('aria-expanded', 'true');
+            }
 
+            // Function to close the sidebar
+            function closeSidebar() {
+                sidebar.classList.remove('is-open');
+                overlay.classList.remove('is-visible');
+                body.classList.remove('no-scroll');
+                hamburgerMenu.setAttribute('aria-expanded', 'false');
+            }
 
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script>
+            // Toggle sidebar on hamburger click
+            hamburgerMenu.addEventListener('click', function() {
+                if (sidebar.classList.contains('is-open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
 
-    const hamburger = document.getElementById('hamburger');
-    const sidebar = document.getElementById('sidebar');
+            // Toggle sidebar on sidebar logo click (only on mobile)
+            sidebarLogoToggle.addEventListener('click', function() {
+                // Only allow logo to toggle sidebar on mobile screens
+                if (window.innerWidth <= 768) { // Match CSS media query breakpoint
+                    if (sidebar.classList.contains('is-open')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                }
+            });
 
-    hamburger.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-    });
+            // Close sidebar on overlay click
+            overlay.addEventListener('click', closeSidebar);
 
-    function showStat(statId) {
-      document.querySelectorAll('.stat-card').forEach(card => {
-        card.style.display = 'none';
-      });
-      document.getElementById(statId).style.display = 'block';
-    }
+            // Close sidebar when a navigation link is clicked (optional, but good for UX)
+            const navLinks = document.querySelectorAll('.nav-list-item a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    // Only close if the sidebar is currently open (i.e., on mobile)
+                    if (sidebar.classList.contains('is-open')) {
+                        closeSidebar();
+                    }
+                });
+            });
 
-    // For simple hover glow effect on .card
-    const basicCards = document.querySelectorAll('.card');
-    basicCards.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--x', `${x}px`);
-        card.style.setProperty('--y', `${y}px`);
-      });
-    });
+            // Handle responsiveness: show/hide hamburger and adjust sidebar based on screen width
+            function handleResize() {
+                const isMobile = window.innerWidth <= 768; // Match CSS media query breakpoint
 
-    // For animated magic cards with overlay
-    const magicCards = document.querySelectorAll(".magic-card");
+                if (!isMobile) {
+                    // Desktop view: ensure sidebar is visible and hamburger/overlay are hidden
+                    sidebar.style.transform = 'translateX(0)'; // Ensure it's visible
+                    sidebar.classList.remove('is-open'); // Remove mobile-specific class
+                    overlay.classList.remove('is-visible');
+                    body.classList.remove('no-scroll');
+                    hamburgerMenu.style.display = 'none'; // Hide hamburger
+                    sidebarLogoToggle.style.cursor = 'default'; // Reset cursor on desktop
+                } else {
+                    // Mobile view: ensure sidebar is off-screen initially if not open, show hamburger
+                    if (!sidebar.classList.contains('is-open')) {
+                        sidebar.style.transform = 'translateX(-100%)';
+                    }
+                    hamburgerMenu.style.display = 'block'; // Show hamburger
+                    sidebarLogoToggle.style.cursor = 'pointer'; // Set cursor for mobile toggle
+                }
+            }
 
-    magicCards.forEach((card) => {
-      const overlay = card.querySelector(".card-overlay");
-
-      card.addEventListener("mousemove", (e) => {
-        const rect = card.getBoundingClientRect();
-        const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
-        const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
-
-        const distX = Math.abs(50 - mouseX);
-        const distY = Math.abs(50 - mouseY);
-        const dist = Math.min(Math.sqrt(distX ** 2 + distY ** 2), 50);
-
-        document.documentElement.style.setProperty("--circle-size", `${dist}%`);
-        document.documentElement.style.setProperty("--x", `${mouseX}%`);
-        document.documentElement.style.setProperty("--y", `${mouseY}%`);
-
-        gsap.to(overlay, { opacity: 1 });
-      });
-
-      card.addEventListener("mouseleave", () => {
-        document.documentElement.style.setProperty("--circle-size", "0%");
-        gsap.to(overlay, { opacity: 0 });
-      });
-
-      card.addEventListener("click", () => {
-        document.documentElement.style.setProperty("--circle-size", "100%");
-      });
-    });
-
-
-
-
-  </script>
+            // Initial call and attach to resize event
+            handleResize();
+            window.addEventListener('resize', handleResize);
+        });
+    </script>
 </body>
-
 </html>

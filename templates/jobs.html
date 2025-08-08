@@ -1,29 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Job Listings</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>Available Jobs</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Gradient background */
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            min-height: 100vh;
-            color: #343a40;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Container styled as translucent white card */
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-image: linear-gradient(
+                230deg,
+                hsl(244deg 19% 15%) 0%,
+                hsl(251deg 20% 15%) 8%,
+                hsl(258deg 21% 16%) 17%,
+                hsl(266deg 21% 16%) 25%,
+                hsl(273deg 21% 16%) 33%,
+                hsl(280deg 21% 17%) 42%,
+                hsl(288deg 22% 17%) 50%,
+                hsl(297deg 22% 17%) 58%,
+                hsl(305deg 23% 17%) 67%,
+                hsl(312deg 25% 18%) 75%,
+                hsl(318deg 27% 19%) 83%,
+                hsl(323deg 29% 19%) 92%,
+                hsl(327deg 31% 20%) 100%
+            );
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
         .container {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(45, 45, 45, 0.95));
+            border: 2px solid #4a4a4a;
+            border-radius: 24px;
+            padding: 40px;
             max-width: 900px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            position: relative;
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24, #ff6b6b);
+            border-radius: 26px;
+            z-index: -1;
+            opacity: 0.3;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.5; }
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 40px;
+            text-align: center;
         }
 
         ul {
@@ -32,61 +89,62 @@
         }
 
         li {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        h2 {
-            color: #4b2cc8; /* Deep purple */
-            margin-bottom: 30px;
-            text-align: center;
-            font-weight: 700;
+        li:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         }
 
         h3 {
-            color: #667eea; /* Light purple */
+            color: #4ecdc4;
             margin-bottom: 8px;
         }
 
         p strong {
-            color: #4b2cc8;
+            color: #ff6b6b;
         }
 
         p em {
-            color: #6c757d;
+            color: #bbb;
         }
 
         .button {
             display: inline-block;
-            padding: 8px 16px;
-            margin: 5px 5px 0 0;
-            font-size: 14px;
+            padding: 10px 18px;
+            font-size: 0.9rem;
             border-radius: 6px;
             text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px 5px 0 0;
         }
 
         .view-btn {
-            background-color: #17a2b8;
+            background: linear-gradient(135deg, #17a2b8, #138496);
             color: white;
         }
 
         .edit-btn {
-            background-color: #28a745;
+            background: linear-gradient(135deg, #28a745, #218838);
             color: white;
         }
 
         .delete-btn {
-            background-color: #dc3545;
+            background: linear-gradient(135deg, #dc3545, #bd2130);
             color: white;
         }
 
         .create-btn,
         .home-btn {
-            background-color: #4b2cc8;
+            background: linear-gradient(135deg, #4b2cc8, #372089);
             color: white;
         }
 
@@ -98,9 +156,8 @@
         hr {
             border: none;
             height: 1px;
-            background-color: #ccc;
-            margin-top: 40px;
-            margin-bottom: 20px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 40px 0 20px;
         }
     </style>
 </head>

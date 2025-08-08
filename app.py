@@ -30,10 +30,10 @@ def home():
         return redirect(url_for('dashboard'))
     return render_template('landing.html')
 
-
 @app.route('/landing')
 def landing():
     return render_template('landing.html')
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -41,7 +41,6 @@ def about():
 @app.route('/features')
 def features():
     return render_template('features.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -83,8 +82,7 @@ def login():
 def logout():
     session.pop('user', None)
     flash('Logged out successfully.')
-    return redirect(url_for('home'))  # Redirecting to landing page instead of login
-
+    return redirect(url_for('home'))
 
 @app.route('/dashboard')
 def dashboard():
@@ -92,9 +90,7 @@ def dashboard():
         return redirect(url_for('login'))
 
     user_email = session['user']
-
     conn = get_db_connection()
-    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute("SELECT COUNT(*) FROM jobs")
@@ -108,10 +104,6 @@ def dashboard():
 
     cursor.execute("SELECT * FROM jobs ORDER BY created_at DESC LIMIT 5")
     recent_jobs = cursor.fetchall()
-
-    
-    cursor.execute("SELECT COUNT(*) FROM resumes WHERE shortlisted = 'yes'")
-    shortlisted_count = cursor.fetchone()[0]
     conn.close()
 
     return render_template('dashboard.html',
@@ -191,18 +183,6 @@ def upload_resume():
         flash('Invalid file type. Only PDF and DOCX are allowed.')
 
     return render_template('upload_resume.html')
-
-@app.route('/resumes')
-def list_resumes():
-    if 'user' not in session:
-        flash('Please login first.')
-        return redirect(url_for('login'))
-
-    conn = get_db_connection()
-    resumes = conn.execute('SELECT * FROM resumes ORDER BY upload_date DESC').fetchall()
-    conn.close()
-    return render_template('resumes.html', resumes=resumes)
-
 @app.route('/job/<int:job_id>/matched-resumes')
 def matched_resumes(job_id):
     if 'user' not in session:
@@ -222,6 +202,39 @@ def matched_resumes(job_id):
     matched = match_resumes(job['skills'], resumes)
 
     return render_template('matched_resumes.html', job=job, resumes=matched)
+
+from flask import send_from_directory
+
+@app.route('/resumes')
+def list_resumes():
+    if 'user' not in session:
+        flash('Please login first.')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    resumes = conn.execute('SELECT * FROM resumes ORDER BY upload_date DESC').fetchall()
+    conn.close()
+    return render_template('resumes.html', resumes=resumes)
+
+@app.route('/delete_resume/<int:resume_id>', methods=['POST'])
+def delete_resume(resume_id):  # ← include the resume_id here!
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT filename FROM resumes WHERE id = ?", (resume_id,))
+    result = cursor.fetchone()
+
+    if result:
+        filename = result[0]
+        cursor.execute("DELETE FROM resumes WHERE id = ?", (resume_id,))
+        conn.commit()
+        flash(f"Resume '{filename}' has been deleted.")
+    else:
+        flash("Resume not found.")
+
+    conn.close()
+    return redirect(url_for('list_resumes'))
+
 
 @app.route('/edit-job/<int:job_id>', methods=['GET', 'POST'])
 def edit_job(job_id):
@@ -264,73 +277,27 @@ def delete_job(job_id):
     flash('Job deleted successfully.')
     return redirect(url_for('dashboard'))
 
-@app.route('/forgot-password', methods=['GET', 'POST'])
-def forgot_password():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        flash('Password reset instructions sent to your email (demo message).')
-        return redirect(url_for('login'))
 
-    return render_template('forgot_password.html')
-
-@app.route('/login/google')
-def google_login():
-    session['user'] = 'Google_User'
-    flash('Logged in via Google.')
-    return redirect(url_for('dashboard'))
-
-@app.route('/login/linkedin')
-def linkedin_login():
-    session['user'] = 'LinkedIn_User'
-    flash('Logged in via LinkedIn.')
-    return redirect(url_for('dashboard'))
-
-@app.route('/login/github')
-def github_login():
-    session['user'] = 'GitHub_User'
-    flash('Logged in via GitHub.')
-    return redirect(url_for('dashboard'))
-
-@app.route('/resume-builder', methods=['GET', 'POST'])
-def generate_resume():
-    if request.method == 'POST':
-        data = request.form.to_dict()
-        rendered = render_template("resume_template.html", **data)
-        pdf = pdfkit.from_string(rendered, False)
-        response = make_response(pdf)
-        response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = 'inline; filename=resume.pdf'
-        return response
-    return render_template("resume_form.html")
 
 @app.route('/resume-form', methods=['GET', 'POST'])
 def resume_form():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        phone = request.form['phone']
-        skills = request.form['skills']
-        experience = request.form['experience']
-        education = request.form['education']
-
-        return render_template('resume_template.html', name=name, email=email,
-                               phone=phone, skills=skills, experience=experience,
-                               education=education)
+        data = request.form.to_dict()
+        return render_template('resume_template.html', **data)
     return render_template('resume_form.html')
-
-@app.route('/profile')
-def profile():
-    user_name = session.get('user')
-    user_email = session.get('email')
-    return render_template('profile.html', name=user_name, email=user_email)
 
 @app.route('/shortlist_candidates/<int:job_id>', methods=['POST'])
 def shortlist_candidates(job_id):
     selected_resume_ids = request.form.getlist('selected_resumes')
     shortlisted_count = len(selected_resume_ids)
 
-    session['shortlisted_count'] = shortlisted_count
+    conn = get_db_connection()
+    for resume_id in selected_resume_ids:
+        conn.execute("UPDATE resumes SET shortlisted = 'yes' WHERE id = ?", (resume_id,))
+    conn.commit()
+    conn.close()
 
+    session['shortlisted_count'] = shortlisted_count
     flash(f"{shortlisted_count} candidates shortlisted successfully.")
     return redirect(url_for('dashboard'))
 
